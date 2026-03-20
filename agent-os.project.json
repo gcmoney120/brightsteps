@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "name": "BrightSteps",
+    "slug": "brightsteps",
+    "repo_root": "."
+  },
+  "paths": {
+    "system_state": ".claude/docs/ops/SYSTEM_STATE.md",
+    "run_root": ".claude/runs",
+    "policy_allowlist": "src/policy/allowlist.ts"
+  },
+  "policy": {
+    "allowlist_type": "ts_export_record",
+    "export_name": "POLICY_ALLOWLIST",
+    "actor_keys": ["command", "atlas", "forge", "sentinel", "compass"],
+    "enforced_output_required_actions": ["step_report"]
+  },
+  "prompts": {
+    "command": "v4.0",
+    "atlas": "v3.1",
+    "forge": "v3.1",
+    "sentinel": "v3.1",
+    "compass": "v3.1"
+  },
+  "models": {
+    "command": "claude-opus-4-6",
+    "atlas": "claude-opus-4-6",
+    "forge": "claude-opus-4-6",
+    "sentinel": "claude-opus-4-6",
+    "compass": "claude-opus-4-6"
+  },
+  "governance": {
+    "system_state_updates": {
+      "mode": "hybrid",
+      "require_manual_approval_for": ["trust_change"],
+      "auto_apply_for": ["trivial"],
+      "trust_change_triggers": {
+        "paths_globs": ["src/auth/**", "src/policy/**", "supabase/migrations/**", "src/lib/supabase/**"],
+        "keywords": ["rls", "policy", "auth", "token", "secret", "permission"],
+        "action_names": ["apply_migration", "deploy_edge_function"],
+        "always_require_sentinel_review_if_trust_change": true
+      }
+    }
+  },
+  "execution": {
+    "test_command": "npm test",
+    "build_command": "npm run build",
+    "lint_command": "npm run lint",
+    "deploy_command": "vercel --prod"
+  },
+  "limits": {
+    "max_steps_per_run": 25
+  }
+}
